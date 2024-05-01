@@ -1,8 +1,3 @@
-import os, requests, time
-from langchain_core.prompts import PromptTemplate
-from langchain.chains.llm import LLMChain
-from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
-
 PROMPT_MAP = {
     'llama-base': 
     '''
@@ -31,29 +26,5 @@ just a summary of the meeting. The action items should be generated in the form 
     ''',
 }
 
-class HF:
-    def __init__(self, prompt_id: str):
-        self.prompt = PromptTemplate(PROMPT_MAP.get(prompt_id))
-        self.llm = HuggingFaceEndpoint(
-            endpoint_url=os.environ.get('HUGGING_FACE_ENDPOINT'),
-            max_new_tokens=512,
-            huggingfacehub_api_token=os.environ.get('HUGGING_FACE_HUB_TOKEN')
-        )
-    
-    def initialize_endpoint(self, max_retries: int = 5, delay: int = 5):
-        for _ in range(max_retries):
-            response = requests.get(self.hf_endpoint_url, headers=self.headers)
-            if response.status_code == 503:
-                print(f"Endpoint is not ready. Retrying in {delay} seconds...")
-                time.sleep(delay)
-            else:
-                return False
-
-        raise Exception("Hugging Face endpoint is not ready. Please try again later.")
-    
-    def initialize_chain(self):
-        chain = LLMChain()
-    
-    
-
-
+def get_prompt(prompt_id: str) -> str:
+    PROMPT_MAP.get(prompt_id)
